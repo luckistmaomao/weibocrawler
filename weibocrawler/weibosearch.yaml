@@ -1,6 +1,6 @@
 searchdb:
     dbname: all_users_db
-    host: 114.212.191.119
+    host: 121.40.193.156
     port: 27017
     BOOL_getcomments: 0
 
