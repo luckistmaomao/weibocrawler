@@ -1,0 +1,14 @@
+detectdata
+*.pyc
+*.log
+*.log.1
+*.log.2
+*.log.3
+*swp
+*dat*
+*~
+weibo_login_cookies.*
+weibocrawler/data/
+weibo-user-crawler/data/
+weibo-user-crawler/logs/
+weibo-user-crawler/analysis/
