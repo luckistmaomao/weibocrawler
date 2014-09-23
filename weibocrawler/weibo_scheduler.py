@@ -22,6 +22,7 @@ try:
     import logging
     
     from loginer import get_loginer
+
     from keyword_processor import get_keyword_processor
     from get_valid_ip import proxy_ip_manager
     from common_conf_manager import MAX_RELOGIN_TRIAL_NUMBER,\
@@ -206,8 +207,9 @@ class NormalCrawlExecuter(threading.Thread):
                 relogin_num = MAX_RELOGIN_TRIAL_NUMBER
                     
                 while relogin_num > 0:
+		    slt = (int)(random.uniform(0, 120))
                         
-                    sleep_when_relogin(GET_INTERVAL_SECONDS - 5)
+                    sleep_when_relogin(slt)
 
                     if loginer.relogin(str(cur_username), str(cur_password), str(cur_cookie_file)):
                         [page_is_validity, new_url_list, crawl_feed_count, new_feed_count,increment ] = crawler.crawl()
@@ -295,8 +297,8 @@ class ProxyCrawlExecuter(threading.Thread):
                 relogin_num = MAX_RELOGIN_TRIAL_NUMBER
                     
                 while relogin_num > 0:
-                        
-                    sleep_when_relogin(PROXY_GET_INTERVAL_SECONDS)
+                    slt = (int)(random.uniform(0, 120))  
+                    sleep_when_relogin(slt)
 
                     if loginer.relogin(cur_username, cur_password, cur_cookie_file):
                         

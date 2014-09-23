@@ -428,16 +428,16 @@ class ProxyIPManager(threading.Thread):
     def _add_clear_proxys(self):
         clear_proxys = []
         if SCAN_FREE_DAILI is False:
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62991")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62992")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62993")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62994")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62995")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62996")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62997")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62998")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:62999")
-            clear_proxys.append("kunzhipeng:kzp6666366@106.186.18.67:63000")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62011")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62012")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62013")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62014")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62015")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62016")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62017")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62018")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62019")
+            clear_proxys.append("beixiaohai:1328257811@106.186.18.67:62020")
         
         global proxy_ip_db_mutex
         if proxy_ip_db_mutex.acquire():

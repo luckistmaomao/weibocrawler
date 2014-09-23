@@ -47,7 +47,10 @@ class KeywordProcessor(threading.Thread):
         
         while(True):
             
-            self._access_db_for_keywords()
+            try:
+                self._access_db_for_keywords()
+            except:
+                pass
             
             time.sleep(KEYWORD_DB_SCAN_INTERVAL)
     
