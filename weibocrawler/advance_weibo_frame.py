@@ -14,13 +14,10 @@ try:
     from storage_manager import SingleWeibo,CommentAdv,RetweetAdv
     from mongoengine.errors import ValidationError, NotUniqueError, OperationError  # @UnresolvedImport
     from my_exceptions import OtherException
-    
     from keyword_processor import keyword_processor
-    
     from common_conf_manager import OPEN_WRITE_NOTUNIQUE_LOG,\
         GET_PAGE_TIMEOUT
         
-    
     from weibo_branch import branch_weibo
 except:
     s = traceback.format_exc()

@@ -93,6 +93,10 @@ RESET = bool(conf_dic['mysqldb_pool']['reset'])
 FAILURES = bool(conf_dic['mysqldb_pool']['failures'])
 PING = int(conf_dic['mysqldb_pool']['ping'])
 
+PROXIES = []
+for proxy in conf_dic['proxies']:
+    PROXIES.append(proxy['ip'])
+
 if __name__ == '__main__':
 	print DBNAME, DBHOST, DBPORT
 	print COOKIE_FILE

@@ -18,6 +18,7 @@ try:
     import datetime
     from BeautifulSoup import BeautifulSoup  # @UnresolvedImport
     from common_conf_manager import SCAN_FREE_DAILI
+    from conf import PROXIES
 except:
     s = traceback.format_exc()
     print s
@@ -428,16 +429,17 @@ class ProxyIPManager(threading.Thread):
     def _add_clear_proxys(self):
         clear_proxys = []
         if SCAN_FREE_DAILI is False:
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62011")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62012")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62013")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62014")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62015")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62016")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62017")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62018")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62019")
-            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62020")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62011")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62012")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62013")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62014")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62015")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62016")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62017")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62018")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62019")
+#            clear_proxys.append("benxiaohai:1328257811@106.186.18.67:62020")
+            clear_proxys.extend(PROXIES)
         
         global proxy_ip_db_mutex
         if proxy_ip_db_mutex.acquire():

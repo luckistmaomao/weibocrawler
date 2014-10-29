@@ -7,6 +7,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')  # @UndefinedVariable
 
 try:
+    import jieba
     from weibo_scheduler import get_weibo_scheduler
     from keyword_processor import get_keyword_processor
     from weibo_branch import get_user_keyword_processor
@@ -17,14 +18,12 @@ try:
     import logging.config
 except ImportError as err:
     s = traceback.format_exc()
-    
     print s
     
 logging.config.fileConfig('runtime_infor_log.conf')
-
 scheduler_logger = logging.getLogger("schedulerLog")
+
 def main():
-    
     threads = []
     
     user_keyword_pro = get_user_keyword_processor()
@@ -42,10 +41,8 @@ def main():
     for thread in threads:
         scheduler_logger.info("thread " + thread.name + " start!")
         thread.start()
-    
     for thread in threads:
         thread.join()
         
 if __name__ == '__main__':
-    
     main()

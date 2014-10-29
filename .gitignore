@@ -12,3 +12,5 @@ weibocrawler/data/
 weibo-user-crawler/data/
 weibo-user-crawler/logs/
 weibo-user-crawler/analysis/
+weibocrawler/common_conf_manager.py
+weibocrawler/weibosearch.yaml

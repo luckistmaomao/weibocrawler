@@ -6,6 +6,7 @@ Created on 2014��4��20��
 '''
 import traceback
 import logging
+import os
 try:
     import urllib
     import re
@@ -628,6 +629,16 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         cur_url = self.url_wrapper.to_url()
 
         if not validity_check:
+
+            #test start #
+            if not os.path.exists('data/'):
+                os.mkdir('data')
+
+            num = len(os.listdir('data/'))
+            with open('data/'+str(num+1)+'real.html','w') as f:
+                f.write(page)
+
+            #test end"
             
             end_time = time.clock()
             run_time = (int)((end_time + wait_time - start_time) * 1000)

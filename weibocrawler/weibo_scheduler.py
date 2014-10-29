@@ -207,7 +207,7 @@ class NormalCrawlExecuter(threading.Thread):
                 relogin_num = MAX_RELOGIN_TRIAL_NUMBER
                     
                 while relogin_num > 0:
-		    slt = (int)(random.uniform(0, 120))
+		    slt = (int)(random.uniform(15, 85))
                         
                     sleep_when_relogin(slt)
 
@@ -293,29 +293,23 @@ class ProxyCrawlExecuter(threading.Thread):
             scheduler_logger.info("after first crawl")
             #for re-get page
             if not page_is_validity:
-                    
                 relogin_num = MAX_RELOGIN_TRIAL_NUMBER
-                    
                 while relogin_num > 0:
-                    slt = (int)(random.uniform(0, 120))  
+                    slt = (int)(random.uniform(10,90))  
                     sleep_when_relogin(slt)
 
                     if loginer.relogin(cur_username, cur_password, cur_cookie_file):
-                        
                         scheduler_logger.debug("before recrawl")
                         [page_is_validity, new_url_list, crawl_feed_count, new_feed_count,increment ] = crawler.crawl()
                         scheduler_logger.debug("after recrawl")
-                        
                         break
                         
                     relogin_num -= 1
                 
             if not page_is_validity:
-                    
                 return [crawl_feed_count, new_feed_count,increment ]
                 
             for new_url in new_url_list:
-                    
                 self.url_wrapper_list_manager.add_url_wrapper(new_url)
             
         return [crawl_feed_count, new_feed_count,increment]
@@ -490,22 +484,18 @@ def get_crawler_by_url_wrapper(url_wrapper, proxy_IP="", proxy_used=False, proxy
          
     if isinstance(url_wrapper, AdvKeywordRealWeiboURLWrapper):
         new_weibo_parser = AdvKeywordRealWeiboParser(url_wrapper)
-             
         new_crawler = AdvKeywordRealWeiboCrawler(url_wrapper, new_weibo_parser, proxy_IP, proxy_used, proxy_cookie_file)
 
     elif isinstance(url_wrapper, AdvKeywordRealWeiboCommentURLWrapper):
         new_comment_parser = AdvKeywordRealWeiboCommentParser(url_wrapper)
-             
         new_crawler = AdvKeywordRealWeiboCommentCrawler(url_wrapper, new_comment_parser, proxy_IP, proxy_used, proxy_cookie_file)
             
     elif isinstance(url_wrapper, AdvKeywordHotWeiboURLWrapper):
         new_weibo_parser = AdvKeywordHotWeiboParser(url_wrapper)
-             
         new_crawler = AdvKeywordHotWeiboCrawler(url_wrapper, new_weibo_parser, proxy_IP, proxy_used, proxy_cookie_file)
 
     elif isinstance(url_wrapper, AdvKeywordHotWeiboCommentURLWrapper):
         new_comment_parser = AdvKeywordHotWeiboCommentParser(url_wrapper)
-             
         new_crawler = AdvKeywordHotWeiboCommentCrawler(url_wrapper, new_comment_parser, proxy_IP, proxy_used, proxy_cookie_file)
             
     return new_crawler

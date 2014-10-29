@@ -5,11 +5,13 @@ Created on 2014��4��20��
 @author: cc
 '''
 import traceback
+import os
 try:
     import urllib
     import re
     import time
     
+    from bs4 import BeautifulSoup
     from mongoengine.errors import ValidationError, NotUniqueError, OperationError
     
     from advance_weibo_frame import URLWrapper,\
@@ -454,6 +456,17 @@ class AdvKeywordHotWeiboCrawler(WeiboCrawler):
             
             return [ False, [], crawl_feed_count, new_feed_count, increment ]
         
+        if "noresult_tit" in page:
+            print 'hot noresult'
+            print self.url_wrapper.to_url()
+            if not os.path.exists('data/'):
+                os.mkdir('data')
+
+            num = len(os.listdir('data/'))
+            with open('data/'+str(num+1)+'hot.html','w') as f:
+                f.write(page)
+            return [True, [], crawl_feed_count, new_feed_count, increment]
+
         [ validity_check, error_code ]= self.page_validity_checker.check(page, self.url_wrapper.to_url())
         
 
@@ -462,6 +475,16 @@ class AdvKeywordHotWeiboCrawler(WeiboCrawler):
 
         if not validity_check:
             
+            #test start #
+            if not os.path.exists('data/'):
+                os.mkdir('data')
+
+            num = len(os.listdir('data/'))
+            with open('data/'+str(num+1)+'hot.html','w') as f:
+                f.write(page)
+
+            #test end"
+
             end_time = time.clock()
             run_time = (int)((end_time + wait_time - start_time) * 1000)
              
