@@ -23,8 +23,18 @@ login:
       password: justfortest
     - username: yuzt@nlp.nju.edu.cn
       password: weibo112233
-    - username: luckistmaomao5@163.com
-      password: weibo112233
+    - username: 18623548894
+      password: a666888
+    - username: 18623548921
+      password: a666888
+    - username: 18623548928
+      password: a666888
+    - username: 18623548949
+      password: a666888
+    - username: 18623548958
+      password: a666888
+    - username: 18623548963
+      password: a666888
 cookie_file: weibo_login_cookies.dat
 
 logdb:
