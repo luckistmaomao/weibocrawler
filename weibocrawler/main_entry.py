@@ -23,6 +23,8 @@ except ImportError as err:
 
 if not os.path.exists('logs/'):
     os.mkdir('logs')
+if not os.path.exists('Cookies/'):
+    os.mkdir('Cookies')
 curpath=os.path.normpath( os.path.join( os.getcwd(), os.path.dirname(__file__) ) ) 
 logging.config.fileConfig(curpath+'/runtime_infor_log.conf')
 scheduler_logger = logging.getLogger("schedulerLog")
