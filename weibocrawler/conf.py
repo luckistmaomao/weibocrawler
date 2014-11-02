@@ -1,32 +1,33 @@
 # -*- coding: utf-8 -*-
 '''
-	weibosearch db configuration
+    weibosearch db configuration
 
     @MOdified by cheng chuan
     on 2014/4/11
-	Modified by lyuxiao
-	on 2013.11.1
+    Modified by lyuxiao
+    on 2013.11.1
 
 
     @author Jiajun Huang
     Created on 2013/10/17
 '''
 try:
-	import sys
-	import yaml
-
+    import sys
+    import yaml
+    import os
 except ImportError:
-	print >> sys.stderr
-	sys.exit()
+    print >> sys.stderr
+    sys.exit()
 
 try:
-	conf_file = open("weibosearch.yaml", 'r')
+    curpath=os.path.normpath( os.path.join( os.getcwd(), os.path.dirname(__file__) ) ) 
+    conf_file = open(curpath+"/weibosearch.yaml", 'r')
 except:
-	try:
-		conf_file = open("../weibosearch.yaml", 'r')
-	except:
-		print 'weibo.yaml not found'
-	
+    try:
+        conf_file = open("../weibosearch.yaml", 'r')
+    except:
+        print 'weibo.yaml not found'
+    
 conf_dic = yaml.load(conf_file)
 conf_file.close()
 
@@ -72,8 +73,8 @@ COOKIE_FILE = conf_dic['cookie_file']
 
 LOGIN_USER_INFOR = []
 for login_infor in conf_dic['login']:
-	LOGIN_USER_INFOR.append({"username":str(login_infor["username"]), "password":str(login_infor["password"])})
-	
+    LOGIN_USER_INFOR.append({"username":str(login_infor["username"]), "password":str(login_infor["password"])})
+    
 ###########The following are configuration data about log database
 LOGDB = str(conf_dic['logdb']['dbname'])
 LOGHOST = str(conf_dic['logdb']['host'])
@@ -98,9 +99,9 @@ for proxy in conf_dic['proxies']:
     PROXIES.append(proxy['ip'])
 
 if __name__ == '__main__':
-	print DBNAME, DBHOST, DBPORT
-	print COOKIE_FILE
-	print LOGDB, LOGHOST, LOGUSER, LOGPW
+    print DBNAME, DBHOST, DBPORT
+    print COOKIE_FILE
+    print LOGDB, LOGHOST, LOGUSER, LOGPW
 
-	for login_infor in LOGIN_USER_INFOR:
-		print 'username: ' + login_infor['username'] + '\t' + "password: " + login_infor['password']
+    for login_infor in LOGIN_USER_INFOR:
+        print 'username: ' + login_infor['username'] + '\t' + "password: " + login_infor['password']

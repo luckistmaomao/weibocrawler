@@ -1,6 +1,6 @@
 #coding:utf-8
 import traceback
-
+import os
 import sys
 
 reload(sys)
@@ -20,8 +20,13 @@ except ImportError as err:
     s = traceback.format_exc()
     print s
     
-logging.config.fileConfig('runtime_infor_log.conf')
+
+if not os.path.exists('logs/'):
+    os.mkdir('logs')
+curpath=os.path.normpath( os.path.join( os.getcwd(), os.path.dirname(__file__) ) ) 
+logging.config.fileConfig(curpath+'/runtime_infor_log.conf')
 scheduler_logger = logging.getLogger("schedulerLog")
+
 
 def main():
     threads = []
