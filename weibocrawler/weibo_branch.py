@@ -111,13 +111,13 @@ def branch_weibo(weibo_2_store):
     weibo['source'] = 'weibo'
     weibo['sentiment'] = 0
     weibo['attention'] = 0.0
-#    try:
-#        weibo['weibo_keywords'] = KeywordsExtraction.ChineseDealing.extractWeiboTag(weibo['content'])
-#    except:
-#        s = traceback.format_exc()
-#        weibo['weibo_keywords'] = []
-#        print s
-#    
+    try:
+        weibo['weibo_keywords'] = KeywordsExtraction.ChineseDealing.extractWeiboTag(weibo['content'])
+    except:
+        s = traceback.format_exc()
+        weibo['weibo_keywords'] = []
+        print s
+    
     weibo_keywords = weibo["keyword"]
     
     if threadLock.acquire():
