@@ -19,6 +19,7 @@ try:
         GET_PAGE_TIMEOUT
         
     from weibo_branch import branch_weibo
+    from bs4 import BeautifulSoup
 except:
     s = traceback.format_exc()
     
@@ -227,10 +228,10 @@ def page_2_comment_trees_adv(page):
 #########################################高级搜索中单纯的微博（不含评论）获取, 开始############################################    
 ADV_KEYWORD_WEIBO_CONSTANT_DICT = {
                         u"script" : u"/descendant::script",
-                        u"inside html mark" : u"feed_list W_linecolor",
+                        u"inside html mark" : u"search_feed\\\"",
                         u"inside html regex" : u"view\((\{.*\})\)",
-                        u"single weibo path" : u"/descendant::dl[starts-with(@class,'feed_list W_linecolor')]",#[re:match(text(), 'some text')]
-                        u"mid path" : u"//dl[starts-with(@class,'feed_list W_linecolor')]",
+                        u"single weibo path" : u"/descendant::div[starts-with(@class,'WB_cardwrap S_bg2 clearfix')]",#[re:match(text(), 'some text')]
+                        u"mid path" : u"//dl[starts-with(@class,'feed_list W_texta')]",
                         u"mid attribute" : u"mid",
                         u"uid path" : u"//img[@usercard]",
                         u"uid attribute" : u"usercard",
@@ -262,136 +263,186 @@ class AdvKeywordWeiboXMLTreeParser():
     #need to faster
     def __init__(self, weibo):
         self.weibo = weibo
+        self.text = etree.tostring(weibo)
+        self.soup = BeautifulSoup(self.text)
 
     def get_mid(self):
         '''
         Raise AdvKeywordWeiboPageParseException
         '''
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid path']+'[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get mid element failed'])
-        nrt_elmt = nrt_elmt_list[0]
-        if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid attribute'] in nrt_elmt.attrib):
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get mid attribute failed'])
-        return nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid attribute'])
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid path']+'[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get mid element failed'])
+        #nrt_elmt = nrt_elmt_list[0]
+        #if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid attribute'] in nrt_elmt.attrib):
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get mid attribute failed'])
+        #return nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid attribute'])
+        div = self.soup.find('div',{'action-type':'feed_list_item'})
+        mid = div.get('mid') 
+        return mid
 
     def get_uid(self):
         '''
         Raise AdvKeywordWeiboPageParseException
         '''
-        nrt_elmt_list = self.weibo.xpath( ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid path'] + '[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:        
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get uid element failed'])
-        nrt_elmt = nrt_elmt_list[0]
-        #for exception handle
-        if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid attribute'] in nrt_elmt.attrib):
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get uid attribute failed'])
-        uid = re.findall('\d+',nrt_elmt.get( ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid attribute']))
-        if len(uid) != 0:
-            return ''.join(uid)
-        else:
-            return ''
+        #nrt_elmt_list = self.weibo.xpath( ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid path'] + '[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:        
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get uid element failed'])
+        #nrt_elmt = nrt_elmt_list[0]
+        ##for exception handle
+        #if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid attribute'] in nrt_elmt.attrib):
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get uid attribute failed'])
+        #uid = re.findall('\d+',nrt_elmt.get( ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'uid attribute']))
+        #if len(uid) != 0:
+        #    return ''.join(uid)
+        #else:
+        #    return ''
+        uid = self.soup.find('a',{'class':'W_texta W_fb'}).get('usercard')[3:13] 
+        return uid
         
     def get_nickname(self):
         res = ""
         '''
         Raise AdvKeywordWeiboPageParseException
         '''
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"weibo nickname path"] + '[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get nickname failed'])
-        nrt_elmt = nrt_elmt_list[0]
-        
-        try:
-            res = nrt_elmt.text
-        except:
-            pass
-        return res
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"weibo nickname path"] + '[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get nickname failed'])
+        #nrt_elmt = nrt_elmt_list[0]
+        #
+        #try:
+        #    res = nrt_elmt.text
+        #except:
+        #    pass
+        #return res
+        nickname = self.soup.find('a',{'class':'W_texta W_fb'}).get('nick-name') 
+        return nickname
     
     def get_content(self):
         '''
         Raise AdvKeywordWeiboPageParseException
         '''
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"weibo content path"] + '[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get content element failed'])
-        nrt_elmt = nrt_elmt_list[0]
-        content =  etree.tostring(nrt_elmt, method='text', encoding=DOM_TREE_CONSTRUCT_ENCODE)
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"weibo content path"] + '[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get content element failed'])
+        #nrt_elmt = nrt_elmt_list[0]
+        #content =  etree.tostring(nrt_elmt, method='text', encoding=DOM_TREE_CONSTRUCT_ENCODE)
+        #return content
+        content = self.soup.find('p',{'class':'comment_txt'}).text.strip()
         return content
 
     def get_is_forward(self):
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'is forward path']+'[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get is forward element failed'])
-        nrt_elmt = nrt_elmt_list[0]
-        if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"is forward attribute"] in nrt_elmt.attrib):
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'is forward path']+'[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get is forward element failed'])
+        #nrt_elmt = nrt_elmt_list[0]
+        #if not (ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"is forward attribute"] in nrt_elmt.attrib):
+        #    return False
+        #is_forward = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"is forward attribute"])
+        #return bool(is_forward)
+        if self.soup.find('div',{'class':'comment'}): 
+            self.ori_weibo = self.soup.find('div',{'class':'comment'})
+            return True
+        else:
             return False
-        is_forward = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"is forward attribute"])
-        return bool(is_forward)
 
     def get_forward_ref(self):
         '''
         Get the URL where this weibo is forwarded from
         '''
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward ref path"] + '[1]')
-        if len(nrt_elmt_list) is 0:
-            return ''
-        nrt_elmt = nrt_elmt_list[0]
-        result = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward ref attribute"])
-        
-        if not result:
-            result =  ''
-        return result
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward ref path"] + '[1]')
+        #if len(nrt_elmt_list) is 0:
+        #    return ''
+        #nrt_elmt = nrt_elmt_list[0]
+        #result = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward ref attribute"])
+        #
+        #if not result:
+        #    result =  ''
+        #return result
+        try: 
+            forward_ref = ori_weibo.find('a',{'class':'W_texta W_fb'}).get('href') 
+        except:
+            forward_ref = ''
+        return forward_ref
 
     def get_forward_uid(self):
         '''
         Need to verify
         '''
-        nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward uid path"] + '[1]')
-        #for exception handle
-        if len(nrt_elmt_list) is 0:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT["get forward uid element failed"])
-        nrt_elmt = nrt_elmt_list[0]
-        result = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward uid attribute"]) 
-        #for exception handle
-#         if not result:
-#             raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get forward uid attribute failed'])
-        if not result:
-            return ''
-        usercard = re.findall('\d+',result)
-        return ''.join(usercard)
+        #nrt_elmt_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward uid path"] + '[1]')
+        ##for exception handle
+        #if len(nrt_elmt_list) is 0:
+        #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT["get forward uid element failed"])
+        #nrt_elmt = nrt_elmt_list[0]
+        #result = nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward uid attribute"]) 
+        ##for exception handle
+#       #  if not result:
+#       #      raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get forward uid attribute failed'])
+        #if not result:
+        #    return ''
+        #usercard = re.findall('\d+',result)
+        #return ''.join(usercard)
+        try:
+            forward_uid = self.ori_weibo.find('a',{'class':'W_texta W_fb'}).get('usercard')[3:]  
+        except:
+            forward_uid = ''
+        return forward_uid
 
     def get_forward_content(self):
-        nrt_elmt = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward content path"] + '[1]')
-        if len(nrt_elmt) is 0:
-            return ''
-        result = etree.tostring(nrt_elmt[0], method='text', encoding=DOM_TREE_CONSTRUCT_ENCODE)
-        return result
+        #nrt_elmt = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"forward content path"] + '[1]')
+        #if len(nrt_elmt) is 0:
+        #    return ''
+        #result = etree.tostring(nrt_elmt[0], method='text', encoding=DOM_TREE_CONSTRUCT_ENCODE)
+        #return result
+        try:
+            forward_content = ori_weibo.find('p',{'class':'comment_txt'}).text.strip()
+        except:
+            forward_content = ''
+        return forward_content
 
-    def get_stat_infor(self):
+    def get_stat_infor(self,is_forward):
         '''
         Get this weibo's statistic information
         [date, like number, forward number, favorite number, comment number]
         '''
         #corresponding to [date, like, forward, favorite, comment]
         infor = ["", 0, 0, 0, 0]
-        stat_root_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"statistic infor path"] + '[1]')
-        if len(stat_root_list) is 0:
-            return infor
-        stat_root = stat_root_list[0]
-        date = self._get_date(stat_root)
-        n_like = self._get_like_num(stat_root)
-        n_forward = self._get_forward_num(stat_root)
-        n_favorite = self._get_favorite_num(stat_root)
-        n_comment = self._get_comment_num(stat_root)
-        infor = [date, n_like, n_forward, n_favorite, n_comment]
-        return infor
+        #stat_root_list = self.weibo.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"statistic infor path"] + '[1]')
+        #if len(stat_root_list) is 0:
+        #    return infor
+        #stat_root = stat_root_list[0]
+        #date = self._get_date(stat_root)
+        #n_like = self._get_like_num(stat_root)
+        #n_forward = self._get_forward_num(stat_root)
+        #n_favorite = self._get_favorite_num(stat_root)
+        #n_comment = self._get_comment_num(stat_root)
+        #infor = [date, n_like, n_forward, n_favorite, n_comment]
+        #return infor
+        l = []
+        row4 = self.soup.find('ul',{'class':'feed_action_info feed_action_row4'})
+        for li in row4.findAll('li'):
+            num_regex = re.compile('\d+')
+            text = li.text
+            m =  num_regex.search(text)
+            if m:
+                l.append(int(m.group()))
+            else:
+                l.append(0)
+        n_favorite,n_forward,n_comment,n_like = l
 
+        if is_forward:
+            create_time = self.soup.findAll('a',{'node-type':'feed_list_item_date'})[1].get('title')
+        else:
+            create_time = self.soup.find('a',{'node-type':'feed_list_item_date'}).get('title')
+        infor = [create_time, n_like, n_forward, n_favorite, n_comment]
+        return infor
+        
+        
     def _get_date(self, stat_root):
         nrt_elmt_list = stat_root.xpath(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u"date path"] + '[1]')
         if len(nrt_elmt_list) is 0:
@@ -460,6 +511,7 @@ def find_inside_weibo_trees_adv(page):
             m = inside_html_regex.search( ele.text )
             if m is not None:
                 content_inside_script = m.group(1)
+                #print content_inside_script
                 content_inside_scripts.append(content_inside_script)
     #for exception handle
     if len(content_inside_scripts) is 0:
@@ -480,6 +532,7 @@ def find_inside_weibo_trees_adv(page):
         #Get <html: html_content>'s html_content
         key_values = json.loads(content_inside_script)
         inner_html_text = key_values.get('html')
+        #print inner_html_text
         weibos_tree = etree.fromstring( inner_html_text, etree.HTMLParser() )
         for weibo_tree in weibos_tree.xpath( ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'single weibo path']):
             #need to faster

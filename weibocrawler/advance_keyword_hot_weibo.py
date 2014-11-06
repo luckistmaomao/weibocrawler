@@ -226,7 +226,7 @@ def weibo_tree_2_weibo_adv(keyword, weibo_tree, page_num, weibo_type):
         original_cntnt = weibo.get_forward_content()
     
     
-    weiboinfo = weibo.get_stat_infor()
+    weiboinfo = weibo.get_stat_infor(is_forward)
     create_time = weiboinfo[0]
     n_like = int(weiboinfo[1])
     n_forward = int(weiboinfo[2])

@@ -45,7 +45,7 @@ login:
 #      password: a666888
 #    - username: 18623548963
 #      password: a666888
-cookie_file: weibo_login_cookies.dat
+cookie_file: Cookies/weibo_login_cookies.dat
 
 logdb:
     dbname: weibosearch

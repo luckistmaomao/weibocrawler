@@ -327,7 +327,7 @@ def weibo_tree_2_weibo_adv(keyword, weibo_tree, page_num, weibo_type):
         original_cntnt = weibo.get_forward_content()
     
     
-    weiboinfo = weibo.get_stat_infor()
+    weiboinfo = weibo.get_stat_infor(is_forward)
     create_time = weiboinfo[0]
     n_like = int(weiboinfo[1])
     n_forward = int(weiboinfo[2])
@@ -390,7 +390,7 @@ class AdvKeywordRealWeiboParser(PageParser):
             raise err
 
         if not weibo_trees:
-    
+            print 'no weibo_trees' 
             return [crawl_feed_count, new_feed_count, weibo_comment_infor]
 
         increment = 0
@@ -603,6 +603,15 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         
         try:
             page = self._get_page()
+            #test start #
+            if not os.path.exists('data/'):
+                os.mkdir('data')
+
+            num = len(os.listdir('data/'))
+            with open('data/'+str(num+1)+'real.html','w') as f:
+                f.write(page)
+
+            #test end"
         except:
             end_time = time.clock()
             run_time = (int)((end_time + wait_time - start_time) * 1000)
@@ -624,6 +633,7 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
             return [True, [], crawl_feed_count, new_feed_count, increment]
 
         [ validity_check, error_code ]= self.page_validity_checker.check(page, self.url_wrapper.to_url())
+        #print 'validity_check,',validity_check
 
         weibo_type = self.url_wrapper.get_url_type()
         cur_url = self.url_wrapper.to_url()
@@ -663,8 +673,8 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
                 
             #need to log
             except AdvKeywordWeiboPageParseException as err:
-                with open('data/'+str(time.time())+'.html','a') as f:
-                    f.write(page)
+#                with open('data/'+str(time.time())+'.html','a') as f:
+#                    f.write(page)
                 end_time = time.clock()
                 run_time = (int)((end_time + wait_time - start_time) * 1000)
                 
@@ -675,7 +685,6 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
                     err_msg=cur_url,
                     run_time=run_time
                     )
-            
                 return [ False, [], crawl_feed_count, new_feed_count, increment ]
         try:      
             [crawl_feed_count, new_feed_count, increment, comment_dict] = self.page_parser.parse(page)
@@ -742,13 +751,14 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
     def _howmanypgs(self, first_page):
         
         soup = BeautifulSoup(first_page)    
-        html = str(soup)    
-        result = re.findall(u'search_num.+\s(\d+)\s',html)  
+        page = str(soup)
+        result = re.findall('search_num.+?(\d+)',page)[0] 
         #for log handle
         if not result:
             raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get howmannypgs failed'])
         
-        page_num = int(result[0])/20 + 1
+        total_num= int(result)
+        page_num = total_num/20+1 if total_num%20 else total_num/20
         return page_num
 #############################################################################################
 
