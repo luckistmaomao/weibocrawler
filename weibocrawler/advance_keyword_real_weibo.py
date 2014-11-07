@@ -750,16 +750,17 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
        
     def _howmanypgs(self, first_page):
         
-        soup = BeautifulSoup(first_page)    
-        page = str(soup)
-        result = re.findall('search_num.+?(\d+)',page)[0] 
+        pagerange = '0'
+        availablepgs = re.findall(FIRST_PAGE_REGEX, first_page)
+        
         #for log handle
-        if not result:
+        if not availablepgs:
             raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get howmannypgs failed'])
         
-        total_num= int(result)
-        page_num = total_num/20+1 if total_num%20 else total_num/20
-        return page_num
+        if len(availablepgs):
+            pagerange = availablepgs[-2]
+
+        return int(pagerange)
 #############################################################################################
 
 ##############################Implement Customized DataStorer##################################
