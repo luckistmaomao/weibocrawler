@@ -459,12 +459,12 @@ class AdvKeywordHotWeiboCrawler(WeiboCrawler):
         if "noresult_tit" in page:
             print 'hot noresult'
             print self.url_wrapper.to_url()
-            if not os.path.exists('data/'):
-                os.mkdir('data')
-
-            num = len(os.listdir('data/'))
-            with open('data/'+str(num+1)+'hot.html','w') as f:
-                f.write(page)
+#            if not os.path.exists('data/'):
+#                os.mkdir('data')
+#
+#            num = len(os.listdir('data/'))
+#            with open('data/'+str(num+1)+'hot.html','w') as f:
+#                f.write(page)
             return [True, [], crawl_feed_count, new_feed_count, increment]
 
         [ validity_check, error_code ]= self.page_validity_checker.check(page, self.url_wrapper.to_url())

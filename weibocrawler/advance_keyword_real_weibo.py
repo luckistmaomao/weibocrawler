@@ -604,12 +604,12 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         try:
             page = self._get_page()
             #test start #
-            if not os.path.exists('data/'):
-                os.mkdir('data')
-
-            num = len(os.listdir('data/'))
-            with open('data/'+str(num+1)+'real.html','w') as f:
-                f.write(page)
+#            if not os.path.exists('data/'):
+#                os.mkdir('data')
+#
+#            num = len(os.listdir('data/'))
+#            with open('data/'+str(num+1)+'real.html','w') as f:
+#                f.write(page)
 
             #test end"
         except:
