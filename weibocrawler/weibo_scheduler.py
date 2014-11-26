@@ -185,6 +185,7 @@ class NormalCrawlExecuter(threading.Thread):
                 
                 #modify the url_wrapper's priority according to the actual crawling result
                 new_url_wrapper.modify_counter(crawl_feed_count, new_feed_count, increment)
+                scheduler_logger.info("keyword:"+new_url_wrapper.url_wrapper.keyword)
                 scheduler_logger.info("{crawl_feed_count: " + str(crawl_feed_count) +", new_feed_count: " + str(new_feed_count) + ", increment:" +str(increment)+ "}")
             except:
                 s = traceback.format_exc()
@@ -209,7 +210,7 @@ class NormalCrawlExecuter(threading.Thread):
                 while relogin_num > 0:
 		    slt = (int)(random.uniform(15, 85))
                         
-                    sleep_when_relogin(slt)
+                    sleep_when_relogin(crawler,slt)
 
                     if loginer.relogin(str(cur_username), str(cur_password), str(cur_cookie_file)):
                         [page_is_validity, new_url_list, crawl_feed_count, new_feed_count,increment ] = crawler.crawl()
@@ -270,6 +271,7 @@ class ProxyCrawlExecuter(threading.Thread):
                 scheduler_logger.debug("after execute_crawl")
                     
                 new_url_wrapper.modify_counter(crawl_feed_count, new_feed_count, increment)
+                scheduler_logger.info("keyword:"+new_url_wrapper.url_wrapper.keyword)
                 scheduler_logger.info("{crawl_feed_count: " + str(crawl_feed_count) +", new_feed_count: " + str(new_feed_count) +", increment: "+str(increment)+"}")
             except:
                 s = traceback.format_exc()
@@ -296,7 +298,7 @@ class ProxyCrawlExecuter(threading.Thread):
                 relogin_num = MAX_RELOGIN_TRIAL_NUMBER
                 while relogin_num > 0:
                     slt = (int)(random.uniform(10,90))  
-                    sleep_when_relogin(slt)
+                    sleep_when_relogin(crawler,slt)
 
                     if loginer.relogin(cur_username, cur_password, cur_cookie_file):
                         scheduler_logger.debug("before recrawl")
@@ -500,8 +502,10 @@ def get_crawler_by_url_wrapper(url_wrapper, proxy_IP="", proxy_used=False, proxy
             
     return new_crawler
 
-def sleep_when_relogin(sleep_seconds=3):
+def sleep_when_relogin(crawler,sleep_seconds=3):
+    keyword = crawler.url_wrapper.keyword
     scheduler_logger.info('--------------------------')
+    scheduler_logger.info('keyword'+keyword)
     scheduler_logger.info('relogin sleep time: ' + str(sleep_seconds))
     scheduler_logger.info('--------------------------')
     time.sleep(sleep_seconds)

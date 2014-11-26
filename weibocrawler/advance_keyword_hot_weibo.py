@@ -588,10 +588,14 @@ class AdvKeywordHotWeiboCrawler(WeiboCrawler):
         availablepgs = re.findall(FIRST_PAGE_REGEX, first_page)
         
         #for log handle
+#        if not availablepgs:
+#            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get howmannypgs failed'])
+#        
+#        if len(availablepgs):
+#            pagerange = availablepgs[-2]
         if not availablepgs:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get howmannypgs failed'])
-        
-        if len(availablepgs):
+            pagerange = 1 
+        else:
             pagerange = availablepgs[-2]
 
         return int(pagerange)

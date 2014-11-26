@@ -604,12 +604,12 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         try:
             page = self._get_page()
             #test start #
-#            if not os.path.exists('data/'):
-#                os.mkdir('data')
-#
-#            num = len(os.listdir('data/'))
-#            with open('data/'+str(num+1)+'real.html','w') as f:
-#                f.write(page)
+            if not os.path.exists('data/'):
+                os.mkdir('data')
+
+            num = len(os.listdir('data/'))
+            with open('data/'+str(num+1)+'real.html','w') as f:
+                f.write(page)
 
             #test end"
         except:
@@ -755,9 +755,8 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         
         #for log handle
         if not availablepgs:
-            raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get howmannypgs failed'])
-        
-        if len(availablepgs):
+            pagerange = 1 
+        else:
             pagerange = availablepgs[-2]
 
         return int(pagerange)
