@@ -365,9 +365,10 @@ class AdvKeywordWeiboXMLTreeParser():
         #    result =  ''
         #return result
         try: 
-            forward_ref = ori_weibo.find('a',{'class':'W_texta W_fb'}).get('href') 
+            forward_ref = self.ori_weibo.find('a',{'class':'W_textb'}).get('href') 
         except:
             forward_ref = ''
+            print traceback.format_exc()
         return forward_ref
 
     def get_forward_uid(self):
@@ -391,6 +392,8 @@ class AdvKeywordWeiboXMLTreeParser():
             forward_uid = self.ori_weibo.find('a',{'class':'W_texta W_fb'}).get('usercard')[3:]  
         except:
             forward_uid = ''
+            print str(self.ori_weibo)
+            print traceback.format_exc()
         return forward_uid
 
     def get_forward_content(self):
@@ -400,9 +403,10 @@ class AdvKeywordWeiboXMLTreeParser():
         #result = etree.tostring(nrt_elmt[0], method='text', encoding=DOM_TREE_CONSTRUCT_ENCODE)
         #return result
         try:
-            forward_content = ori_weibo.find('p',{'class':'comment_txt'}).text.strip()
+            forward_content = self.ori_weibo.find('p',{'class':'comment_txt'}).text.strip()
         except:
             forward_content = ''
+            print traceback.format_exc()
         return forward_content
 
     def get_stat_infor(self,is_forward):
