@@ -392,8 +392,6 @@ class AdvKeywordWeiboXMLTreeParser():
             forward_uid = self.ori_weibo.find('a',{'class':'W_texta W_fb'}).get('usercard')[3:]  
         except:
             forward_uid = ''
-            print str(self.ori_weibo)
-            print traceback.format_exc()
         return forward_uid
 
     def get_forward_content(self):
