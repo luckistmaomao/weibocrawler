@@ -13,6 +13,7 @@ from storage_manager import SingleWeibo
 reload(sys)
 sys.setdefaultencoding('utf8')  # @UndefinedVariable
 
+import os
 import traceback
 import random
 import time
@@ -60,8 +61,16 @@ except:
     
     print s
 
-scheduler_logger = logging.getLogger("schedulerLog")
 loginer = get_loginer()
+if not os.path.exists('logs/'):
+    os.mkdir('logs')
+if not os.path.exists('Cookies/'):
+    os.mkdir('Cookies')
+curpath=os.path.normpath( os.path.join( os.getcwd(), os.path.dirname(__file__) ) ) 
+logging.config.fileConfig(curpath+'/runtime_infor_log.conf')
+scheduler_logger = logging.getLogger("schedulerLog")
+
+
 
 try:
     from Queue import Queue
@@ -534,24 +543,25 @@ def search_retweets_by_weibos():
         thread.start()
 
 
-def search_single_keyword(keyword,start,end):
+def search_single_keyword(keyword,crawl_time_range_list):
     threads = {}
     
     url_wrapper_list_manager = UrlWrapperListManager()
    
-    start_time = datetime.datetime.strptime(start,"%Y-%m-%d-%H") 
-    end_time = datetime.datetime.strptime(end,"%Y-%m-%d-%H") 
+    for start,end in crawl_time_range_list:
+        start_time = datetime.datetime.strptime(start,"%Y-%m-%d-%H") 
+        end_time = datetime.datetime.strptime(end,"%Y-%m-%d-%H") 
 
-    delta_days = (end_time - start_time).days
-    delta_seconds = (end_time - start_time).seconds
-    delta_hours = delta_days*24 + delta_seconds/3600
+        delta_days = (end_time - start_time).days
+        delta_seconds = (end_time - start_time).seconds
+        delta_hours = delta_days*24 + delta_seconds/3600
 
-    for i in range(delta_hours):
-        begin_hour,end_hour = get_time(start_time,i)
+        for i in range(delta_hours):
+            begin_hour,end_hour = get_time(start_time,i)
 
-        first_page = AdvKeywordRealWeiboURLWrapper(keyword=keyword, start_time=begin_hour, end_time=end_hour, page_num=str(1), max_page_num=str(50))
-        url_wrapper_list_manager.add_url_wrapper(first_page)
-        print first_page.to_url()
+            first_page = AdvKeywordRealWeiboURLWrapper(keyword=keyword, start_time=begin_hour, end_time=end_hour, page_num=str(1), max_page_num=str(50))
+            url_wrapper_list_manager.add_url_wrapper(first_page)
+            print first_page.to_url()
 
     
     threads['list'] = url_wrapper_list_manager
@@ -581,21 +591,23 @@ def search_single_keyword(keyword,start,end):
 #                 continue
 #         break
 
+
 def get_time(start,i):
     begin_hour = (start+datetime.timedelta(0,i*3600)).strftime("%Y-%m-%d-%H")
     end_hour = (start+datetime.timedelta(0,i*3600+3600)).strftime("%Y-%m-%d-%H")
 
     return begin_hour,end_hour
 
-logging.config.fileConfig('runtime_infor_log.conf')
-
 
 def main():
 #     search_single_keyword("郁彬", 50, '2014-4-27-0', '2014-5-5-24')
 #     search_single_keyword("Yu Bin", 50, '2014-4-27-0', '2014-5-5-24')
-#    search_single_keyword("食品安全 政府","2014-7-1-0","2014-8-1-0")    # 2014-8-8-24 should be transformed to 2014-8-9-0
+    crawl_time_range_list = []
+    crawl_time_range_list.append(("2014-12-14-0","2014-12-15-0"))   # 2014-8-8-24 should be transformed to 2014-8-9-0
+
+    search_single_keyword("南京大屠杀",crawl_time_range_list)
 #    search_comments_by_weibos()
-    search_retweets_by_weibos()
+#    search_retweets_by_weibos()
 
 if __name__ == '__main__':
     main()
