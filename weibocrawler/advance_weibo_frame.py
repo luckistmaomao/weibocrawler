@@ -598,6 +598,9 @@ class PageValidityChecker:
                
                 print 'pass certificate error'
                 return [ False, AdvKeywordPageGetException.ERROR_CODE_DICT['pass certificate error'] ]
+            elif LOGIN_ING in page:
+                print "正在登陆。。。"
+                return [ False, AdvKeywordPageGetException.ERROR_CODE_DICT['cookie outofdate error']]
             #print "no errors" 
             return [ True, 0 ]
         else:
@@ -614,6 +617,7 @@ PASS_CERTIFICATE_ERROR = '����ͨ��֤'
 COOKIE_OUTOFDATE_ERROR = r'http://weibo.com/sso/login.php?ssosavestate'
 VERIFICATION_ERROR = r'\u4f60\u7684\u884c\u4e3a\u6709\u4e9b\u5f02\u5e38\uff0c\u8bf7\u8f93\u5165\u9a8c\u8bc1\u7801\uff1a' #请输入验证码 
 HTTP_HEADERS= {'User-Agent':'Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0'}
+LOGIN_ING = r'http://passport.weibo.com/wbsso/login?ssosavestate'
 
 COMMENT_PER_PAGE_NUMBER = 20
 RETWEET_PER_PAGE_NUMBER = 20
