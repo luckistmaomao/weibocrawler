@@ -186,7 +186,7 @@ class NormalCrawlExecuter(threading.Thread):
                 #modify the url_wrapper's priority according to the actual crawling result
                 new_url_wrapper.modify_counter(crawl_feed_count, new_feed_count, increment)
                 scheduler_logger.info("keyword:"+new_url_wrapper.url_wrapper.keyword)
-                scheduler_logger.info("{crawl_feed_count: " + str(crawl_feed_count) +", new_feed_count: " + str(new_feed_count) + ", increment:" +str(increment)+ "}")
+                scheduler_logger.info("{crawl_feed_count: " + str(crawl_feed_count) +", new_feed_count: " + str(new_feed_count) + ", increment: " +str(increment)+ "}")
             except:
                 s = traceback.format_exc()
                 print s
@@ -505,7 +505,7 @@ def get_crawler_by_url_wrapper(url_wrapper, proxy_IP="", proxy_used=False, proxy
 def sleep_when_relogin(crawler,sleep_seconds=3):
     keyword = crawler.url_wrapper.keyword
     scheduler_logger.info('--------------------------')
-    scheduler_logger.info('keyword'+keyword)
+    scheduler_logger.info('keyword————'+keyword)
     scheduler_logger.info('relogin sleep time: ' + str(sleep_seconds))
     scheduler_logger.info('--------------------------')
     time.sleep(sleep_seconds)
