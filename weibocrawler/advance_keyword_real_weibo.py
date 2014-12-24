@@ -603,7 +603,7 @@ class AdvKeywordRealWeiboCrawler(WeiboCrawler):
         
         try:
             page = self._get_page()
-            #test start #
+#            #test start #
 #            if not os.path.exists('data/'):
 #                os.mkdir('data')
 #
