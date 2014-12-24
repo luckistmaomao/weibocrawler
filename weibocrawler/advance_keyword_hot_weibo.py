@@ -105,9 +105,9 @@ class AdvKeywordHotWeiboURLWrapper(URLWrapper):
         url_part1 = 'http://s.weibo.com/wb/' + keyword_in_url
         
         if self.start_time == "" and self.end_time == "":
-            url_part2 = '&xsort=time'
+            url_part2 = '&xsort=hot'
         else:
-            url_part2 = '&xsort=time&timescope=custom:' + self.start_time + ':' + self.end_time
+            url_part2 = '&xsort=hot&timescope=custom:' + self.start_time + ':' + self.end_time
             
         url_part3 = '&page=' + str(self.page_num)
         
