@@ -601,7 +601,7 @@ class PageValidityChecker:
             elif LOGIN_ING in page:
                 print "正在登陆。。。"
                 return [ False, AdvKeywordPageGetException.ERROR_CODE_DICT['cookie outofdate error']]
-            ##print "no errors" 
+            #print "no errors" 
             return [ True, 0 ]
         else:
             print 'page not exist'
