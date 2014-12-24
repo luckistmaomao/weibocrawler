@@ -13,7 +13,7 @@ def print_to_file(file_name, page):
     This function is for testing
     '''
     global counter
-    my_file = open('./detectdata/'+str(file_name) + str(counter) + ".html", 'w')
+    my_file = open('./data/'+str(file_name) + str(counter) + ".html", 'w')
     
     counter += 1
     
