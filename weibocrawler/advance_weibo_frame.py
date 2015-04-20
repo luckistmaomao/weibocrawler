@@ -5,7 +5,9 @@ Created on 2014��4��20��
 @author: cc
 '''
 import traceback
+
 from my_test import print_to_file
+
 
 try:
     import requests  # @UnresolvedImport
@@ -266,6 +268,7 @@ class AdvKeywordWeiboXMLTreeParser():
         self.text = etree.tostring(weibo)
         self.soup = BeautifulSoup(self.text)
 
+    #
     def get_mid(self):
         '''
         Raise AdvKeywordWeiboPageParseException
@@ -279,7 +282,24 @@ class AdvKeywordWeiboXMLTreeParser():
         #    raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['get mid attribute failed'])
         #return nrt_elmt.get(ADV_KEYWORD_WEIBO_CONSTANT_DICT[u'mid attribute'])
         div = self.soup.find('div',{'action-type':'feed_list_item'})
-        mid = div.get('mid') 
+        mid = div.get('mid')
+        # try:
+        # div = self.soup.find('div',{'action-type':'feed_list_item'})
+        #            mid = div.get('mid')
+        #            if not os.path.exists('html/'):
+        #                os.mkdir('html')
+        #
+        #            num = len(os.listdir('html/'))
+        #            with open('html/'+str(num+1)+'real.html','w') as f:
+        #                f.write(self.text)
+        #        except:
+        #            if not os.path.exists('data/'):
+        #                os.mkdir('data')
+        #
+        #            num = len(os.listdir('data/'))
+        #            with open('data/'+str(num+1)+'real.html','w') as f:
+        #                f.write(self.text)
+        #            raise Exception
         return mid
 
     def get_uid(self):
@@ -518,9 +538,15 @@ def find_inside_weibo_trees_adv(page):
     #for exception handle
     if len(content_inside_scripts) is 0:
         page_str = etree.tostring(tree, method='html', pretty_print=True, encoding='utf-8')
-   
+
+#        if not os.path.exists('data/'):
+        # os.mkdir('data')
+        #
+        # num = len(os.listdir('data/'))
+        #        with open('data/'+str(num+1)+'real.html','w') as f:
+        #            f.write(page)
         print_to_file('after tree.html', page_str)
-        
+
         raise AdvKeywordWeiboPageParseException(AdvKeywordWeiboPageParseException.ERROR_CODE_DICT['content inside script find failed'])
     
 #     tmp_tree = etree.fromstring(content_inside_scripts[0], etree.HTMLParser())
