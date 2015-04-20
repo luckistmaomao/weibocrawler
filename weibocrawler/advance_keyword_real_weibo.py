@@ -108,8 +108,8 @@ class AdvKeywordRealWeiboURLWrapper(URLWrapper):
     def to_url(self):
         
         keyword_in_url = urllib.quote(str(self.keyword))
-        
-        url_part1 = 'http://s.weibo.com/wb/' + keyword_in_url
+
+        url_part1 = 'http://s.weibo.com/weibo/' + keyword_in_url
         
         if self.start_time == "" and self.end_time == "":
             url_part2 = '&xsort=time'
@@ -410,9 +410,11 @@ class AdvKeywordRealWeiboParser(PageParser):
                                  operation_status=0,
                                  fail_code=err.get_error_code(),
                                  err_msg=search_url)
-#             except:
-#                 s = traceback.format_exc()
-#                 print s
+            except AttributeError:
+                continue
+                # except:
+                # s = traceback.format_exc()
+            #                 print s
                 
             if not weibo:
 #                 print "continue"
