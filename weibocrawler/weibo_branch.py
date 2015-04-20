@@ -23,26 +23,26 @@ client = MongoClient(DBHOST, DBPORT)
 threadLock = threading.Lock()
 
 class UserKeywordProcessor(threading.Thread):
-    
+
     def __init__(self, thread_name="user keyword processor"):
-        
+
         threading.Thread.__init__(self)
         self.name = thread_name
-        
-        
+
+
     def run(self):
         global keyword_user_dict
-        
+
         while(True):
-            
+
             tmp_keyword_user_dic= keyword_user()
-            
+
             if threadLock.acquire():
                 keyword_user_dict = tmp_keyword_user_dic
                 threadLock.release()
-            
+
             time.sleep(USERS_INFOR_SCAN_INTERVAL)
-    
+
 def keyword_user():
 #    users_db = client["users_database"]
 #    users_collections = users_db["all_registered_users"]
@@ -58,7 +58,7 @@ def keyword_user():
 #        user_keyword_dict[user_db]=keywords
 #        keywords_all.extend(keywords)
 #    keywords_all = list(set(keywords_all))
-#        
+#
 #    keyword_user_dict = defaultdict(list)
 #    for keyword in keywords_all:
 #        for user_db in user_keyword_dict:
@@ -67,7 +67,7 @@ def keyword_user():
 #    return keyword_user_dict
     all_users_db = client['all_users_db']
     users_collections = all_users_db['all_users_info']
-    
+
     all_keywords_collections = all_users_db['all_keywords']
     all_keywords = [keyword_document['keywords'] for keyword_document in all_keywords_collections.find()]
 
@@ -75,6 +75,8 @@ def keyword_user():
     keyword_user_dict = defaultdict(list)
     for keyword in all_keywords:
         for user in users_collections.find():
+            if 'u_mongodb' not in user:
+                continue
             user_db = user['u_mongodb']
             if user_db != '':
                 user_keywords = [user_keywords_document['keywords'] for user_keywords_document in client[user_db].user_keywords.find() ]
@@ -96,13 +98,13 @@ def branch_weibo(weibo_2_store):
     weibo['forward_uid'] = str(weibo_2_store.forward_uid)
     weibo['original_ref'] = str(weibo_2_store.original_ref)
     weibo['original _cntnt'] = str(weibo_2_store.original_cntnt)
-    
+
     date_time = str(weibo_2_store.create_time).split(' ')
     d = date_time[0].split('-')
     t = date_time[1].split(':')
     weibo['create_time'] = datetime.datetime(year=int(d[0]), month=int(d[1]), day=int(d[2]), hour=int(t[0]), minute=int(t[1]))
     weibo['time'] = str(weibo['create_time'])
-    
+
     weibo['url'] = str(weibo_2_store.url)
     weibo['n_like'] = int(weibo_2_store.n_like)
     weibo['n_forward'] = int(weibo_2_store.n_forward)
@@ -117,33 +119,33 @@ def branch_weibo(weibo_2_store):
         s = traceback.format_exc()
         weibo['weibo_keywords'] = []
         print s
-    
+
     weibo_keywords = weibo["keyword"]
-    
+
     if threadLock.acquire():
         all_keywords = keyword_user_dict.keys()
         threadLock.release()
-        
+
         for weibo_keyword in weibo_keywords:
             if weibo_keyword in all_keywords:
                 user_db_list = keyword_user_dict[weibo_keyword]
-                
+
                 for user_db in user_db_list:
                     user_data_db = client[user_db]
                     user_weibo = user_data_db["user_weibo"]
-                
+
                     if not user_data_db.user_weibo.find_one({"mid":weibo["mid"]}):
                         user_weibo.insert(weibo)
-                    
+
 user_keyword_processor = UserKeywordProcessor()
-        
+
 def get_user_keyword_processor():
     global user_keyword_processor
-    
+
     return user_keyword_processor
 
 if __name__ == "__main__":
-    
+
     processor = get_user_keyword_processor()
-    
+
     processor.start()
